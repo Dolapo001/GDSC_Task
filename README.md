@@ -122,11 +122,10 @@ GRANT ALL PRIVILEGES ON DATABASE your_db_name TO your_db_user;
 \q
 Migrate the database:
 
-Run the following command to apply the database migrations:
+### Run the following command to apply the database migrations:
 
-bash
-Copy code
-python manage.py migrate
+`python manage.py migrate`
+
 API Endpoints
 Authentication Endpoints
 Method	Endpoint	Description
@@ -164,8 +163,7 @@ python manage.py test
 API Documentation
 API documentation is generated using drf-spectacular and can be viewed at:
 
-ruby
-Copy code
+
 http://127.0.0.1:8000/api/schema/swagger-ui/
 Database Schema
 The database schema follows best practices for normalization and includes the following tables:
@@ -176,5 +174,6 @@ WorkExperience: Stores the user's job experiences with fields like job title, co
 Skill: Contains a list of user-added or predefined skills.
 For an Entity Relationship Diagram (ERD), refer to the /docs/erd.pdf file in the project repository.
 
-Contributing
+## **Contributing**
+
 We welcome contributions! Please fork this repository and submit a pull request for review.
