@@ -2,7 +2,7 @@
 
 This project is a backend system built with Django and Django REST Framework (DRF) for user authentication, onboarding, and profile management. The backend is scalable, secure, and implements JWT-based authentication, OAuth2 social logins (Google and Apple), and user profile management with work experience and skills onboarding modules.
 
-# **Table of Contents**
+## **Table of Contents**
 
 1. Features
 2. Tech Stack
@@ -16,60 +16,63 @@ This project is a backend system built with Django and Django REST Framework (DR
 10. API Documentation
 11. Database Schema
 12. Contributing
-13. License
-14. Features
+13. License 
 
-Custom user authentication system with JWT tokens.
-OAuth2 authentication for Google and Apple social logins.
-User profile management: view and update profile details.
-Profile picture upload with validation.
-Onboarding modules for managing work experience and skills.
-Basic search functionality to filter users by skills and job experience.
-Secure password handling with validation for complexity.
-Comprehensive API documentation using Swagger.
-Tech Stack
-Backend Framework: Django, Django REST Framework (DRF)
-Database: PostgreSQL
-Authentication: JWT for session management, OAuth2 for social logins
-Image Handling: Cloudinary (optional, for profile pictures)
-Documentation: drf-spectacular (Swagger)
-Prerequisites
-Python 3.8+
-PostgreSQL 12+
-Node.js (optional, for running frontend or OAuth flows)
-Cloudinary account (optional, for profile picture uploads)
-Installation
-Clone the repository:
+## **Features**
 
-bash
-Copy code
-git clone https://github.com/your-username/django-onboarding-backend.git
-cd django-onboarding-backend
-Create a virtual environment:
+* Custom user authentication system with JWT tokens.
+* OAuth2 authentication for Google and Apple social logins.
+* User profile management: view and update profile details.
+* Profile picture upload with validation.
+* Onboarding modules for managing work experience and skills.
+* Basic search functionality to filter users by skills and job experience.
+* Secure password handling with validation for complexity.
+* Comprehensive API documentation using Swagger.
 
-bash
-Copy code
-python3 -m venv venv
-source venv/bin/activate
-Install the dependencies:
 
-bash
-Copy code
-pip install -r requirements.txt
+## **Tech Stack**
+
+* Backend Framework: Django, Django REST Framework (DRF)
+* Database: PostgreSQL
+* Authentication: JWT for session management, OAuth2 for social logins
+* Image Handling: Cloudinary (optional, for profile pictures)
+* Documentation: drf-spectacular (Swagger)
+
+
+## **Prerequisites**
+
+* Python 3.8+
+* PostgreSQL 12+
+* Node.js (optional, for running frontend or OAuth flows)
+* Cloudinary account (optional, for profile picture uploads)
+
+## **Installation**
+
+### Clone the repository:
+
+`git clone https://github.com/Dolapo001/GDSC_Task.git
+cd GDSC_Task`
+
+### Create a virtual environment:
+
+`python3 -m venv venv
+source venv/bin/activate`
+
+### Install the dependencies:
+
+`pip install -r requirements.txt`
+
 Set up environment variables (see Environment Variables).
 
 Configure the database (see Database Setup).
 
-Run migrations:
+### Run migrations:
 
-bash
-Copy code
-python manage.py migrate
-Running the Application
+`python manage.py migrate
+Running the Application`
+
 To start the development server:
 
-bash
-Copy code
 python manage.py runserver
 By default, the server will be accessible at http://127.0.0.1:8000/.
 
