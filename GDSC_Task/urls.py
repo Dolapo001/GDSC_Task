@@ -22,6 +22,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 urlpatterns_v1 = [
     path('auth/', include('core.urls')),
+    #path('skills/', include('skills.urls')),
+    path('work/', include('work.urls'))
 ]
 
 urlpatterns = [

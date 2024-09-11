@@ -45,6 +45,8 @@ DJANGO_APPS = [
 LOCAL_APPS = [
     'common.apps.CommonConfig',
     'core.apps.CoreConfig',
+    'work.apps.WorkConfig',
+    'skills.apps.SkillsConfig',
 ]
 
 THIRD_PARTY_APPS = [
