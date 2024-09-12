@@ -1,4 +1,4 @@
-from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema, OpenApiParameter
 from rest_framework import status
 from skills.serializers import *
 

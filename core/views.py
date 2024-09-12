@@ -7,10 +7,12 @@ from rest_framework.response import Response
 from django.db import transaction
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.docs import *
+from rest_framework.permissions import AllowAny
 
 
 class Registration(APIView):
     serializer_class = RegistrationSerializer
+    permission_classes = [AllowAny]
 
     @registration_docs()
     @transaction.atomic()

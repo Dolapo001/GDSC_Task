@@ -76,64 +76,48 @@ To start the development server:
 python manage.py runserver
 By default, the server will be accessible at http://127.0.0.1:8000/.
 
-Environment Variables
+### Environment Variables
+
 Create a .env file in the project root and add the following environment variables:
 
-bash
-Copy code
 SECRET_KEY=your_secret_key
 DEBUG=True  # Set to False in production
 ALLOWED_HOSTS=127.0.0.1, localhost
 
-# Database
+### Database
+
 DB_NAME=your_db_name
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_PORT=5432
 
-# JWT Settings
-JWT_SECRET_KEY=your_jwt_secret_key
-JWT_ALGORITHM=HS256
-JWT_EXPIRATION_TIME=3600
+### OAuth2 (for Google, Apple)
 
-# OAuth2 (for Google, Apple)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 APPLE_CLIENT_ID=your_apple_client_id
 APPLE_CLIENT_SECRET=your_apple_client_secret
 
-# Cloudinary (optional for profile pictures)
+### Cloudinary 
+
 CLOUDINARY_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-Database Setup
-Create a PostgreSQL database:
 
-bash
-Copy code
-psql
-CREATE DATABASE your_db_name;
-CREATE USER your_db_user WITH PASSWORD 'your_db_password';
-ALTER ROLE your_db_user SET client_encoding TO 'utf8';
-ALTER ROLE your_db_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE your_db_user SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE your_db_name TO your_db_user;
-\q
-Migrate the database:
 
-### Run the following command to apply the database migrations:
+### API Endpoints
 
-`python manage.py migrate`
+#### Authentication Endpoints
 
-API Endpoints
-Authentication Endpoints
-Method	Endpoint	Description
-POST	/api/auth/register/	Register a new user
-POST	/api/auth/login/	User login with JWT
-POST	/api/auth/social-login/google/	Google OAuth2 login
-POST	/api/auth/social-login/apple/	Apple OAuth2 login
-POST	/api/auth/logout/	User logout (invalidate JWT)
+| Method | Endpoint                         | Description                   |
+|--------|-----------------------------------|-------------------------------|
+| POST   | /api/auth/register/               | Register a new user            |
+| POST   | /api/auth/login/                  | User login with JWT            |
+| POST   | /api/auth/social-login/google/    | Google OAuth2 login            |
+| POST   | /api/auth/social-login/apple/     | Apple OAuth2 login             |
+| POST   | /api/auth/logout/                 | User logout (invalidate JWT)   |
+
 User Profile Endpoints
 Method	Endpoint	Description
 GET	/api/profile/	Get user profile
