@@ -516,19 +516,20 @@ def work_experience_delete_docs():
 
 def skill_list_docs():
     return extend_schema(
-        summary="List Skills",
-        description="Retrieve a list of all available skills.",
+        summary="List Predefined Skills",
+        description="This endpoint returns a list of predefined skills available for users to select.",
         tags=['Skills'],
         responses={
             status.HTTP_200_OK: OpenApiResponse(
-                description="A list of skills.",
-                response=SkillSerializer(many=True),
+                description="A list of predefined skills.",
+                response={"application/json"},
                 examples=[
                     OpenApiExample(
                         name="Success Response",
                         value=[
                             {"id": 1, "name": "Python"},
-                            {"id": 2, "name": "Django"}
+                            {"id": 2, "name": "Django"},
+                            {"id": 3, "name": "REST APIs"}
                         ]
                     )
                 ]
@@ -553,19 +554,21 @@ def skill_list_docs():
 def add_user_skills_docs():
     return extend_schema(
         summary="Add User Skill",
-        description="Add a skill to the authenticated user's profile.",
+        description=
+        """
+            This endpoint allows the authenticated user to add a new skill to their profile.
+        """,
         tags=['Skills'],
-        request=UserSkillSerializer,
+        request=AddUserSkillSerializer,
         responses={
             status.HTTP_201_CREATED: OpenApiResponse(
                 description="Skill added successfully.",
-                response=UserSkillSerializer,
+                response={"application/json"},
                 examples=[
                     OpenApiExample(
                         name="Success Response",
                         value={
-                            "id": 1,
-                            "skill": {"id": 2, "name": "Django"}
+                            "skill": {"name": "Django"}
                         }
                     )
                 ]
@@ -602,12 +605,16 @@ def add_user_skills_docs():
 def user_skill_list_docs():
     return extend_schema(
         summary="List User Skills",
-        description="Retrieve a list of all skills associated with the authenticated user.",
+        description=(
+            """
+            Retrieve a list of all skills associated with the authenticated user.
+            """
+        ),
         tags=['Skills'],
         responses={
             status.HTTP_200_OK: OpenApiResponse(
                 description="A list of the user's skills.",
-                response=UserSkillSerializer(many=True),
+                response={"application/json", UserSkillSerializer(many=True)},
                 examples=[
                     OpenApiExample(
                         name="Success Response",
@@ -637,7 +644,11 @@ def user_skill_list_docs():
 def user_skill_delete_docs():
     return extend_schema(
         summary="Delete User Skill",
-        description="Remove a skill from the authenticated user's profile.",
+        description=(
+            """
+            Remove a skill from the authenticated user's profile.
+            """
+        ),
         tags=['Skills'],
         responses={
             status.HTTP_204_NO_CONTENT: OpenApiResponse(
@@ -685,7 +696,11 @@ def user_skill_delete_docs():
 def user_search_docs():
     return extend_schema(
         summary="Search Users",
-        description="Search for users based on skills and job type.",
+        description=(
+            """
+            Search for users based on skills and job type.
+            """
+        ),
         tags=['Users'],
         parameters=[
             OpenApiParameter(name='skills', description='Filter users by skill name.', required=False, type=str),
@@ -694,7 +709,7 @@ def user_search_docs():
         responses={
             status.HTTP_200_OK: OpenApiResponse(
                 description="A list of users matching the search criteria.",
-                response=UserSkillSerializer(many=True),
+                response={"application/json",UserSkillSerializer(many=True)},
                 examples=[
                     OpenApiExample(
                         name="Success Response",
@@ -731,3 +746,186 @@ def user_search_docs():
             )
         }
     )
+
+
+def add_user_interest_docs():
+    return extend_schema(
+        summary="Add User Interest",
+        description=
+        """
+            This endpoint allows the authenticated user to add a new interest to their profile.
+        """,
+        tags=['Interests'],
+        request=AddUserInterestSerializer,
+        responses={
+            status.HTTP_201_CREATED: OpenApiResponse(
+                description="Interest added successfully.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Success Response",
+                        value={
+                            "interest": {"name": "Machine Learning"}
+                        }
+                    )
+                ]
+            ),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
+                description="Validation error.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "non_field_errors": ["Invalid data."]
+                        }
+                    )
+                ]
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Internal Server Error",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "message": "Internal Server Error",
+                            "data": None
+                        }
+                    )
+                ]
+            )
+        }
+    )
+
+
+def view_user_interests_docs():
+    return extend_schema(
+        summary="View User Interests",
+        description=
+        """
+            This endpoint allows the authenticated user to view their list of interests.
+        """,
+        tags=['Interests'],
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                description="A list of user interests.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Success Response",
+                        value=[
+                            {"interest": {"name": "Machine Learning"}},
+                            {"interest": {"name": "Data Science"}}
+                        ]
+                    )
+                ]
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Internal Server Error",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "message": "Internal Server Error",
+                            "data": None
+                        }
+                    )
+                ]
+            )
+        }
+    )
+
+
+def delete_user_interest_docs():
+    return extend_schema(
+        summary="Delete User Interest",
+        description=
+        """
+            This endpoint allows the authenticated user to delete a specific interest from their profile.
+        """,
+        tags=['Interests'],
+        responses={
+            status.HTTP_204_NO_CONTENT: OpenApiResponse(
+                description="Interest deleted successfully.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Success Response",
+                        value={
+                            "message": "Interest deleted successfully."
+                        }
+                    )
+                ]
+            ),
+            status.HTTP_404_NOT_FOUND: OpenApiResponse(
+                description="Interest not found.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "message": "Interest not found.",
+                            "data": None
+                        }
+                    )
+                ]
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Internal Server Error",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "message": "Internal Server Error",
+                            "data": None
+                        }
+                    )
+                ]
+            )
+        }
+    )
+
+
+def interests_list_docs():
+    return extend_schema(
+        summary="List Predefined Interests",
+        description=
+        """
+            This endpoint returns a list of predefined interests available for users to select.
+        """,
+        tags=['Interests'],
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                description="A list of predefined interests.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Success Response",
+                        value=[
+                            {"id": 1, "name": "Machine Learning"},
+                            {"id": 2, "name": "Data Science"},
+                            {"id": 3, "name": "Cloud Computing"}
+                        ]
+                    )
+                ]
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Internal Server Error",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "message": "Internal Server Error",
+                            "data": None
+                        }
+                    )
+                ]
+            )
+        }
+    )
+
+
