@@ -1,12 +1,8 @@
-Sure! Here’s the part you requested converted into proper raw markdown with hashtags and asterisks for headings, lists, and emphasis:
-
-```
 # **User Onboarding and Profile Management Backend**
 
 This project is a backend system built with Django and Django REST Framework (DRF) for user authentication, onboarding, and profile management. The backend is scalable, secure, and implements JWT-based authentication, OAuth2 social logins (Google and Apple), and user profile management with work experience and skills onboarding modules.
 
 ---
-
 ## **Table of Contents**
 
 1. [Features](#features)
@@ -61,21 +57,21 @@ This project is a backend system built with Django and Django REST Framework (DR
 
 1. **Clone the repository**:
 
-    ```bash
+    ```
     git clone https://github.com/your-username/django-onboarding-backend.git
     cd django-onboarding-backend
     ```
 
 2. **Create a virtual environment**:
 
-    ```bash
+    ```
     python3 -m venv venv
     source venv/bin/activate
     ```
 
 3. **Install the dependencies**:
 
-    ```bash
+    ```
     pip install -r requirements.txt
     ```
 
@@ -85,7 +81,7 @@ This project is a backend system built with Django and Django REST Framework (DR
 
 6. **Run migrations**:
 
-    ```bash
+    ```
     python manage.py migrate
     ```
 
@@ -95,7 +91,7 @@ This project is a backend system built with Django and Django REST Framework (DR
 
 To start the development server:
 
-```bash
+```
 python manage.py runserver
 ```
 
@@ -142,7 +138,7 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 1. **Create a PostgreSQL database**:
 
-   ```bash
+   ```
    psql
    CREATE DATABASE your_db_name;
    CREATE USER your_db_user WITH PASSWORD 'your_db_password';
@@ -157,7 +153,7 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
    Run the following command to apply the database migrations:
 
-   ```bash
+   ```
    python manage.py migrate
    ```
 
@@ -213,7 +209,7 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 To run unit tests:
 
-```bash
+```
 python manage.py test
 ```
 
@@ -224,7 +220,7 @@ python manage.py test
 API documentation is generated using **drf-spectacular** and can be viewed at:
 
 ```
-http://127.0.0.1:8000/api/schema/swagger-ui/
+http://127.0.0.1:8000/
 ```
 
 ---
@@ -247,10 +243,3 @@ For an Entity Relationship Diagram (ERD), refer to the `/docs/erd.pdf` file in t
 We welcome contributions! Please fork this repository and submit a pull request for review.
 
 ---
-
-## **License**
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-```
-
-You can now copy and paste this raw markdown into your `README.md` file. Let me know if you need further adjustments!
