@@ -23,10 +23,10 @@ This project is a backend system built with Django and Django REST Framework (DR
 ## **Features**
 
 - **Custom user authentication system** with JWT tokens.
-- **OAuth2 authentication** for Google and Apple social logins.
+- **OAuth2 authentication** for Google social logins.
 - **User profile management**: view and update profile details.
 - **Profile picture upload** with validation.
-- **Onboarding modules** for managing work experience and skills.
+- **Onboarding modules** for managing work experience skills, interests.
 - **Basic search functionality** to filter users by skills and job experience.
 - **Secure password handling** with validation for complexity.
 - **Comprehensive API documentation** using Swagger.
@@ -105,7 +105,6 @@ Create a `.env` file in the project root and add the following environment varia
 ```bash
 SECRET_KEY=your_secret_key
 DEBUG=True  # Set to False in production
-ALLOWED_HOSTS=127.0.0.1, localhost
 
 # Database
 DB_NAME=your_db_name
@@ -114,8 +113,7 @@ DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_PORT=5432
 
-
-# OAuth2 (for Google, Apple)
+# OAuth2 (for Google)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 

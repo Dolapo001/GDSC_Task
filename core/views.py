@@ -1,4 +1,5 @@
 import logging
+import traceback
 from venv import logger
 
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -94,4 +95,5 @@ class UserProfileUpdateView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logging.error(f"Error occurred during profile update: {e}")
+            logging.error(traceback.format_exc())  # Add traceback logging for more details
             return Response({'message': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

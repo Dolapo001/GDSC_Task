@@ -13,8 +13,8 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-#from drf_spectacular.contrib import rest_framework_simplejwt
-
+import cloudinary
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,12 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 #DEBUG = os.getenv('DEBUG') == 'True'
+load_dotenv()
+DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = ['*']
-DEBUG = True
 
-#SECRET_KEY = os.getenv('SECRET_KEY')
-
-SECRET_KEY = 'django-insecure-^os-=^t!(m3amq4qx!-w87#g@4o)!3ohjz%59f!#x_j09%m+!d'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Application definition
 
@@ -54,6 +53,8 @@ THIRD_PARTY_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'social_django',
+    'cloudinary',
+    'cloudinary_storage',
 
 ]
 
@@ -133,11 +134,24 @@ WSGI_APPLICATION = 'GDSC_Task.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+load_dotenv()  # Load environment variables from .env file
+
+#DATABASES = {
+ ##      'ENGINE': 'django.db.backends.postgresql',
+   #     'NAME': os.getenv('DB_NAME'),
+    #    'USER': os.getenv('DB_USER'),
+     #   'PASSWORD': os.getenv('DB_PASSWORD'),
+      #  'HOST': os.getenv('DB_HOST'),
+       # 'PORT': os.getenv('DB_PORT'),
+    #}
+#}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default="postgresql://gdsc_task_user:6cgHUV6yCTJZespfeyIFHZZZ2IGcMauv@dpg-cri8frdumphs73cfck00-a.frankfurt-postgres.render.com/gdsc_task",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
@@ -180,15 +194,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-}
+# settings.py
+
+
+load_dotenv()
+
+CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
+CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY')
+CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
+
+# Then configure Cloudinary
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET
+)
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
