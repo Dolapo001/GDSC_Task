@@ -141,7 +141,7 @@ load_dotenv()  # Load environment variables from .env file
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_gdsc_task2',
+        'NAME': 'test_gdsc_task',
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
