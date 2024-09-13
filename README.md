@@ -46,6 +46,7 @@ This project is a backend system built with Django and Django REST Framework (DR
 ## **Prerequisites**
 
 - Python 3.8+
+- Django Rest Framework
 - PostgreSQL 12+
 - [Cloudinary](https://cloudinary.com/) account (optional, for profile picture uploads)
 
@@ -113,16 +114,10 @@ DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_PORT=5432
 
-# JWT Settings
-JWT_SECRET_KEY=your_jwt_secret_key
-JWT_ALGORITHM=HS256
-JWT_EXPIRATION_TIME=3600
 
 # OAuth2 (for Google, Apple)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-APPLE_CLIENT_ID=your_apple_client_id
-APPLE_CLIENT_SECRET=your_apple_client_secret
 
 # Cloudinary (optional for profile pictures)
 CLOUDINARY_NAME=your_cloudinary_name
@@ -180,7 +175,7 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 | POST   | `/api/v1/auth/register/`           | Register a new user               |
 | POST   | `/api/v1/auth/login/`              | User login with JWT               |
 | POST   | `/api/v1/auth/social-login/google/` | Google OAuth2 login               |
-| POST   | `/api/v1/auth/logout/`             | User logout (invalidate JWT)      |
+
 
 ## User Profile Endpoints
 
