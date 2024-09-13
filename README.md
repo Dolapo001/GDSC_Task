@@ -256,8 +256,6 @@ CREATE TABLE User (
     name VARCHAR(50) NOT NULL,
     phone VARCHAR(20),
     profile_picture VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -267,8 +265,6 @@ CREATE TABLE User (
 - `name`: User’s name.
 - `phone`: Optional phone number.
 - `profile_picture`: URL or path to the profile picture.
-- `created_at`: Timestamp for creation.
-- `updated_at`: Timestamp for last update.
 
 ---
 
@@ -286,8 +282,6 @@ CREATE TABLE WorkExperience (
     end_date DATE,
     description TEXT,
     FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -301,8 +295,6 @@ CREATE TABLE WorkExperience (
 - `start_date`: Start date.
 - `end_date`: End date (optional).
 - `description`: Job description.
-- `created_at`: Timestamp for creation.
-- `updated_at`: Timestamp for last update.
 
 ---
 
@@ -312,16 +304,12 @@ CREATE TABLE WorkExperience (
 CREATE TABLE Skill (
     id CHAR(36) PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
 **Fields:**
 - `id`: UUID primary key (CHAR(36)).
 - `name`: Skill name.
-- `created_at`: Timestamp for creation.
-- `updated_at`: Timestamp for last update.
 
 ---
 
@@ -331,16 +319,12 @@ CREATE TABLE Skill (
 CREATE TABLE Interest (
     id CHAR(36) PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
 **Fields:**
 - `id`: UUID primary key (CHAR(36)).
 - `name`: Interest name.
-- `created_at`: Timestamp for creation.
-- `updated_at`: Timestamp for last update.
 
 ---
 
@@ -353,8 +337,6 @@ CREATE TABLE UserSkill (
     skill_id CHAR(36),
     FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
     FOREIGN KEY (skill_id) REFERENCES Skill(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -362,8 +344,6 @@ CREATE TABLE UserSkill (
 - `id`: UUID primary key (CHAR(36)).
 - `user_id`: UUID foreign key (CHAR(36)).
 - `skill_id`: UUID foreign key (CHAR(36)).
-- `created_at`: Timestamp for creation.
-- `updated_at`: Timestamp for last update.
 
 ---
 
@@ -376,8 +356,6 @@ CREATE TABLE UserInterest (
     interest_id CHAR(36),
     FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
     FOREIGN KEY (interest_id) REFERENCES Interest(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -385,8 +363,6 @@ CREATE TABLE UserInterest (
 - `id`: UUID primary key (CHAR(36)).
 - `user_id`: UUID foreign key (CHAR(36)).
 - `interest_id`: UUID foreign key (CHAR(36)).
-- `created_at`: Timestamp for creation.
-- `updated_at`: Timestamp for last update.
 
 ---
 
