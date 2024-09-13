@@ -1,8 +1,11 @@
+from unittest.mock import patch, MagicMock
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -92,3 +95,74 @@ class UserProfileUpdateTests(APITestCase):
         }
         response = self.client.put(self.profile_update_url, update_data, format='multipart')
         self.assertTrue('profile_picture' in response.data)
+
+
+class GoogleOAuth2LoginTests(APITestCase):
+
+    def setUp(self):
+        self.url = reverse('google-auth')
+        self.access_token = "mocked-google-access-token"
+
+    @patch('social_django.utils.load_backend')
+    @patch('social_core.backends.google.GoogleOAuth2.do_auth')
+    def test_google_login_success(self, mock_do_auth, mock_load_backend):
+        """
+        Test successful login via Google OAuth2 and JWT token generation.
+        """
+
+        # Mock the user returned by the Google backend
+        user = User.objects.create_user(username="testuser", email="test@example.com", password="password")
+        mock_do_auth.return_value = user
+
+        # Mock the backend loader
+        mock_load_backend.return_value = MagicMock()
+
+        # Make the request
+        response = self.client.post(self.url, {"access_token": self.access_token}, format="json")
+
+        # Assert that the response has the correct status code
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Assert that the JWT tokens are returned
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)
+
+        # Assert the tokens are valid JWT tokens
+        refresh = RefreshToken(response.data['refresh'])
+        self.assertEqual(refresh.access_token.payload['user_id'], user.id)
+
+    @patch('social_django.utils.load_backend')
+    @patch('social_core.backends.google.GoogleOAuth2.do_auth')
+    def test_google_login_invalid_token(self, mock_do_auth, mock_load_backend):
+        """
+        Test Google login failure due to invalid access token.
+        """
+
+        # Mock the Google OAuth2 failure due to invalid token
+        mock_do_auth.side_effect = Exception("Invalid access token")
+
+        # Mock the backend loader
+        mock_load_backend.return_value = MagicMock()
+
+        # Make the request with an invalid access token
+        response = self.client.post(self.url, {"access_token": "invalid-token"}, format="json")
+
+        # Assert that the response has the correct status code
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Assert that the correct error message is returned
+        self.assertEqual(response.data, {"error": "Invalid access token"})
+
+    def test_google_login_missing_access_token(self):
+        """
+        Test Google login failure due to missing access token in the request.
+        """
+
+        # Make the request without access token
+        response = self.client.post(self.url, {}, format="json")
+
+        # Assert that the response has the correct status code
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Assert the error message
+        self.assertIn("access_token", response.data)

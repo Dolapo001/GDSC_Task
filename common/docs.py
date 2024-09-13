@@ -929,3 +929,58 @@ def interests_list_docs():
     )
 
 
+def google_login_docs():
+    return extend_schema(
+        summary="Google OAuth2 Login",
+        description="""
+            This endpoint allows the user to log in or sign up using their Google account.
+            The frontend must send the Google OAuth2 `access_token` to this endpoint.
+            If the authentication is successful, it returns JWT tokens (access and refresh).
+        """,
+        tags=['Authentication'],
+        request={
+            "application/json": {
+                "access_token": "string"
+            }
+        },
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                description="User logged in successfully.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Success Response",
+                        value={
+                            "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                            "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                        }
+                    )
+                ]
+            ),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
+                description="Invalid access token.",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "error": "Invalid access token"
+                        }
+                    )
+                ]
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Internal Server Error",
+                response={"application/json"},
+                examples=[
+                    OpenApiExample(
+                        name="Error Response",
+                        value={
+                            "message": "Internal Server Error",
+                            "data": None
+                        }
+                    )
+                ]
+            )
+        }
+    )

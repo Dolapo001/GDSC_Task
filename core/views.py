@@ -11,6 +11,11 @@ from django.db import transaction
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.docs import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from social_django.utils import load_strategy, load_backend
+from social_core.backends.google import GoogleOAuth2
+from social_core.exceptions import AuthException
+from django.conf import settings
+from django.contrib.auth import login
 
 
 class Registration(APIView):
@@ -97,3 +102,34 @@ class UserProfileUpdateView(APIView):
             logging.error(f"Error occurred during profile update: {e}")
             logging.error(traceback.format_exc())  # Add traceback logging for more details
             return Response({'message': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GoogleOAuth2Login(APIView):
+    permission_classes = [AllowAny]
+
+    @google_login_docs()
+    def post(self, request):
+        try:
+            strategy = load_strategy(request)
+            backend = load_backend(strategy, 'google-oauth2', None)
+
+            try:
+                # Get the access token from the request data
+                user = backend.do_auth(request.data.get('access_token'))
+            except AuthException as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+            if user and user.is_active:
+                # Login the user and create a JWT token
+                login(request, user)
+                refresh = RefreshToken.for_user(user)
+
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                })
+            else:
+                return Response({"error": "Authentication failed"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logging.error(f"Error occurred: {e}")
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
