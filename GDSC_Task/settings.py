@@ -124,6 +124,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -137,22 +138,19 @@ WSGI_APPLICATION = 'GDSC_Task.wsgi.application'
 
 load_dotenv()  # Load environment variables from .env file
 
-#DATABASES = {
- ##      'ENGINE': 'django.db.backends.postgresql',
-   #     'NAME': os.getenv('DB_NAME'),
-    #    'USER': os.getenv('DB_USER'),
-     #   'PASSWORD': os.getenv('DB_PASSWORD'),
-      #  'HOST': os.getenv('DB_HOST'),
-       # 'PORT': os.getenv('DB_PORT'),
-    #}
-#}
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default="postgresql://gdsc_task_user:6cgHUV6yCTJZespfeyIFHZZZ2IGcMauv@dpg-cri8frdumphs73cfck00-a.frankfurt-postgres.render.com/gdsc_task",
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'test_gdsc_task2',
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+        'TEST': {
+            'NAME': 'test_gdsc_task',
+            'DEPENDENCIES': [],
+        },
+    }
 }
 
 
@@ -221,6 +219,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '19079379242-lprbba673e1oa1ju824ajqblftclhfi8.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
