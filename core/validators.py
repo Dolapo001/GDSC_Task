@@ -1,3 +1,5 @@
+import os
+
 from django.core.exceptions import ValidationError
 
 import re
@@ -28,13 +30,11 @@ def validate_image(image):
         raise ValidationError("Image size exceeds the limit of 500KB.")
 
     valid_extensions = ['.jpg', '.jpeg', '.png']
-    file_extension = image.name.split('.')[-1].lower()
+    file_extension = os.path.splitext(image.name)[1].lower()
     if file_extension not in valid_extensions:
         raise ValidationError("Invalid file type. Only '.jpg', '.jpeg', and '.png' are allowed.")
 
     return image
-
-
 def validate_password_complexity(password):
     """Ensure password meets complexity requirements."""
     if not re.search(r'\d', password):

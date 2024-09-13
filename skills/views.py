@@ -36,7 +36,7 @@ class AddUserSkillView(APIView):
     @add_user_skills_docs()
     def post(self, request):
         try:
-            serializer = self.serializer_class(data=request.data)
+            serializer = self.serializer_class(data=request.data, context={'request': request})
             if serializer.is_valid():
                 serializer.save(user=request.user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -81,7 +81,7 @@ class UserSkillDeleteView(APIView):
 
 class UserSearchView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserSkillSerializer
+    serializer_class = UserSearchSerializer
 
     @user_search_docs()
     def get(self, request):
@@ -116,7 +116,7 @@ class AddUserInterestView(APIView):
     @add_user_interest_docs()
     def post(self, request):
         try:
-            serializer = self.serializer_class(data=request.data)
+            serializer = self.serializer_class(data=request.data, context={'request': request})
             if serializer.is_valid():
                 serializer.save(user=request.user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -127,15 +127,15 @@ class AddUserInterestView(APIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ViewUserInterestsView(APIView):
+class UserInterestsView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserInterest
+    serializer_class = UserInterestSerializer
 
     @view_user_interests_docs()
     def get(self, request):
         try:
-            interests = UserInterest.objects.filter(user=request.user)
-            serializer = self.serializer_class(interests, many=True)
+            user_interest = UserInterest.objects.filter(user=request.user)
+            serializer = self.serializer_class(user_interest, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"Error occurred: {e}")
@@ -143,7 +143,6 @@ class ViewUserInterestsView(APIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# Delete User Interest View
 class DeleteUserInterestView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -170,8 +169,9 @@ class InterestListView(APIView):
     def get(self, request):
         try:
             interests = Interest.objects.all()
-            serializer = InterestSerializer(interests, many=True)
+            serializer = self.serializer_class(interests, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"Error occurred: {e}")
-            return Response({'message': f'Internal Server Error: {str(e)}', 'data': None}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': f'Internal Server Error: {str(e)}', 'data': None},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)

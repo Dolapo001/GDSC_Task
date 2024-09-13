@@ -3,6 +3,7 @@ from common.models import BaseModel
 from django.db import models
 from core.models import User
 
+
 class Skill(BaseModel):
     name = models.CharField(max_length=50, unique=True)
 

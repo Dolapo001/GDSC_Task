@@ -155,6 +155,14 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
    python manage.py migrate
    ```
 
+3. **Populate the database**:
+
+   Run the following command to apply skills and interest to the database population:
+
+   ```
+   python manage.py populate_data.py
+   ```
+
 ---
 
 ## **API Endpoints**
@@ -162,7 +170,6 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 ---
 
----
 
 # API Endpoints Documentation
 
@@ -217,10 +224,6 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 ---
 
----
-
-
----
 
 ## **Testing**
 
@@ -305,7 +308,7 @@ CREATE TABLE WorkExperience (
 
 #### 3. **Skill Table**
 
-```postgresql
+```sql
 CREATE TABLE Skill (
     id CHAR(36) PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
@@ -324,7 +327,7 @@ CREATE TABLE Skill (
 
 #### 4. **Interest Table**
 
-```postgresql
+```sql
 CREATE TABLE Interest (
     id CHAR(36) PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
@@ -343,7 +346,7 @@ CREATE TABLE Interest (
 
 #### 5. **UserSkill Table**
 
-```bash
+```sql
 CREATE TABLE UserSkill (
     id CHAR(36) PRIMARY KEY,
     user_id CHAR(36),
@@ -396,7 +399,8 @@ CREATE TABLE UserInterest (
 - **Skill** and **Interest** have a one-to-many relationship with **UserSkill** and **UserInterest**, respectively.
 
 This schema ensures that UUIDs are used consistently for primary keys and foreign keys, and it maintains the integrity of the relationships between tables.
-For an Entity Relationship Diagram (ERD), refer to the `/docs/erd.pdf` file in the project repository.
+
+For an Entity Relationship Diagram (ERD), refer to the [database diagram](https://drawsql.app/teams/lonestarr/diagrams/gdsc-task).
 
 ---
 

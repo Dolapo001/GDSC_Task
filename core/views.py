@@ -1,5 +1,7 @@
 import logging
 from venv import logger
+
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import RegistrationSerializer, LoginSerializer, UserProfileSerializer
@@ -7,7 +9,7 @@ from rest_framework.response import Response
 from django.db import transaction
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.docs import *
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 class Registration(APIView):
@@ -65,7 +67,7 @@ class UserProfileView(APIView):
     def get(self, request):
         try:
             user = request.user
-            if not user:
+            if not user or not user.is_authenticated:
                 return Response({'message': 'User not authenticated', 'data': None},
                                 status=status.HTTP_401_UNAUTHORIZED)
             serializer = self.serializer_class(user)
@@ -73,3 +75,23 @@ class UserProfileView(APIView):
         except Exception as e:
             logging.error(f"Error occurred: {e}")
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UserProfileUpdateView(APIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    @user_profile_docs()
+    def put(self, request):
+        try:
+            user = request.user
+            # Partial update allows updating only a subset of fields
+            serializer = self.serializer_class(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logging.error(f"Error occurred during profile update: {e}")
+            return Response({'message': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
