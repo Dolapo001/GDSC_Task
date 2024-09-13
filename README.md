@@ -17,7 +17,6 @@ This project is a backend system built with Django and Django REST Framework (DR
 10. [API Documentation](#api-documentation)
 11. [Database Schema](#database-schema)
 12. [Contributing](#contributing)
-13. [License](#license)
 
 ---
 
@@ -48,7 +47,6 @@ This project is a backend system built with Django and Django REST Framework (DR
 
 - Python 3.8+
 - PostgreSQL 12+
-- Node.js (optional, for running frontend or OAuth flows)
 - [Cloudinary](https://cloudinary.com/) account (optional, for profile picture uploads)
 
 ---
@@ -161,47 +159,66 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 ## **API Endpoints**
 
-### **Authentication Endpoints**
 
-| Method | Endpoint               | Description                |
-|--------|------------------------|----------------------------|
-| POST   | `/api/auth/register/`   | Register a new user        |
-| POST   | `/api/auth/login/`      | User login with JWT        |
-| POST   | `/api/auth/social-login/google/` | Google OAuth2 login |
-| POST   | `/api/auth/social-login/apple/`  | Apple OAuth2 login  |
-| POST   | `/api/auth/logout/`     | User logout (invalidate JWT) |
+---
 
-### **User Profile Endpoints**
+---
 
-| Method | Endpoint                | Description              |
-|--------|-------------------------|--------------------------|
-| GET    | `/api/profile/`          | Get user profile         |
-| PUT    | `/api/profile/update/`   | Update user profile      |
-| PUT    | `/api/profile/picture/`  | Upload/update profile picture |
+# API Endpoints Documentation
 
-### **Onboarding - Work Experience**
+## Authentication Endpoints
 
-| Method | Endpoint                         | Description                          |
-|--------|----------------------------------|--------------------------------------|
-| GET    | `/api/onboarding/work-experience/` | List all work experience entries     |
-| POST   | `/api/onboarding/work-experience/` | Add a new work experience entry      |
-| PUT    | `/api/onboarding/work-experience/{id}/` | Update a work experience entry |
-| DELETE | `/api/onboarding/work-experience/{id}/` | Delete a work experience entry |
+| Method | Endpoint                          | Description                       |
+|--------|-----------------------------------|-----------------------------------|
+| POST   | `/api/v1/auth/register/`           | Register a new user               |
+| POST   | `/api/v1/auth/login/`              | User login with JWT               |
+| POST   | `/api/v1/auth/social-login/google/` | Google OAuth2 login               |
+| POST   | `/api/v1/auth/logout/`             | User logout (invalidate JWT)      |
 
-### **Onboarding - Skills and Interests**
+## User Profile Endpoints
 
-| Method | Endpoint                         | Description                          |
-|--------|----------------------------------|--------------------------------------|
-| GET    | `/api/onboarding/skills/`        | List all skills                     |
-| POST   | `/api/onboarding/skills/`        | Add new skills                      |
-| PUT    | `/api/onboarding/skills/{id}/`   | Update skills                       |
-| DELETE | `/api/onboarding/skills/{id}/`   | Delete skills                       |
+| Method | Endpoint                  | Description              |
+|--------|---------------------------|--------------------------|
+| GET    | `/api/v1/profile/`        | Get user profile         |
+| PUT    | `/api/v1/profile/update/` | Update user profile      |
 
-### **Search and Filter**
+## Onboarding - Work Experience
 
-| Method | Endpoint                       | Description                        |
-|--------|--------------------------------|------------------------------------|
-| GET    | `/api/search/users/`           | Search users by skills or experience |
+| Method | Endpoint                          | Description                          |
+|--------|-----------------------------------|--------------------------------------|
+| GET    | `/api/v1/work/experiences/`       | List all work experience entries     |
+|  GET   |  `/api/v1/work/experiences/<uuid:pk>/` | List work experience details        |
+| POST   | `/api/v1/work/experiences/create/` | Add a new work experience entry      |
+| PUT    | `/api/v1/work/experiences/<uuid:pk>/edit/` | Update a work experience entry       |
+| DELETE | `/api/v1/work/experiences/<uuid:pk>/delete/` | Delete a work experience entry       |
+
+## Onboarding - Skills and Interests
+
+| Method | Endpoint                            | Description                          |
+|--------|-------------------------------------|--------------------------------------|
+| GET    | `/api/v1/skills/`                   | List all skills                      |
+| POST   | `/api/v1/user-skills/add/`          | Add new skill to user profile        |
+| GET    | `/api/v1/user-skills/add/`          | Add new user skill (to be clarified) |
+| GET    | `/api/v1/user-skills/user-skills/`  | List user skills                     |
+| DELETE | `/api/v1/user-skills/<uuid:pk>/delete/` | Delete user skill                    |
+| GET    | `/api/v1/users/search/`             | Search for users                     |
+| GET    | `/api/v1/user-interests/`           | List user interests                  |
+| POST   | `/api/v1/user-interests/add/`       | Add new user interest                |
+| DELETE | `/api/v1/user-interests/<uuid:pk>/delete/` | Delete user interest                 |
+| GET    | `/api/v1/interests/`                | List all predefined interests        |
+
+
+
+## Search and Filter
+
+| Method | Endpoint                | Description                        |
+|--------|-------------------------|------------------------------------|
+| GET    | `/api/v1/users/search/` | Search users by skills or experience |
+
+---
+
+---
+
 
 ---
 
@@ -225,15 +242,160 @@ http://127.0.0.1:8000/
 
 ---
 
-## **Database Schema**
 
-The database schema follows best practices for normalization and includes the following tables:
 
-- **User**: Stores basic user information like email, password, etc.
-- **Profile**: Extends the user model to include additional fields like profile picture, phone number.
-- **WorkExperience**: Stores the user's job experiences with fields like `job title`, `company name`, `start date`, etc.
-- **Skill**: Contains a list of user-added or predefined skills.
+#### 1. **User Table**
 
+```sql
+CREATE TABLE User (
+    id CHAR(36) PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    phone VARCHAR(20),
+    profile_picture VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+**Fields:**
+- `id`: UUID primary key (CHAR(36)).
+- `email`: Unique email address.
+- `name`: User’s name.
+- `phone`: Optional phone number.
+- `profile_picture`: URL or path to the profile picture.
+- `created_at`: Timestamp for creation.
+- `updated_at`: Timestamp for last update.
+
+---
+
+#### 2. **WorkExperience Table**
+
+```sql
+CREATE TABLE WorkExperience (
+    id CHAR(36) PRIMARY KEY,
+    user_id CHAR(36),
+    job_title VARCHAR(100) NOT NULL,
+    company_name VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    job_type VARCHAR(50) CHECK (job_type IN ('Full-time', 'Part-time', 'Contract')) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+**Fields:**
+- `id`: UUID primary key (CHAR(36)).
+- `user_id`: UUID foreign key (CHAR(36)).
+- `job_title`: Job title.
+- `company_name`: Company name.
+- `location`: Job location.
+- `job_type`: Employment type.
+- `start_date`: Start date.
+- `end_date`: End date (optional).
+- `description`: Job description.
+- `created_at`: Timestamp for creation.
+- `updated_at`: Timestamp for last update.
+
+---
+
+#### 3. **Skill Table**
+
+```postgresql
+CREATE TABLE Skill (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+**Fields:**
+- `id`: UUID primary key (CHAR(36)).
+- `name`: Skill name.
+- `created_at`: Timestamp for creation.
+- `updated_at`: Timestamp for last update.
+
+---
+
+#### 4. **Interest Table**
+
+```postgresql
+CREATE TABLE Interest (
+    id CHAR(36) PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+**Fields:**
+- `id`: UUID primary key (CHAR(36)).
+- `name`: Interest name.
+- `created_at`: Timestamp for creation.
+- `updated_at`: Timestamp for last update.
+
+---
+
+#### 5. **UserSkill Table**
+
+```bash
+CREATE TABLE UserSkill (
+    id CHAR(36) PRIMARY KEY,
+    user_id CHAR(36),
+    skill_id CHAR(36),
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (skill_id) REFERENCES Skill(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+**Fields:**
+- `id`: UUID primary key (CHAR(36)).
+- `user_id`: UUID foreign key (CHAR(36)).
+- `skill_id`: UUID foreign key (CHAR(36)).
+- `created_at`: Timestamp for creation.
+- `updated_at`: Timestamp for last update.
+
+---
+
+#### 6. **UserInterest Table**
+
+```sql
+CREATE TABLE UserInterest (
+    id CHAR(36) PRIMARY KEY,
+    user_id CHAR(36),
+    interest_id CHAR(36),
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (interest_id) REFERENCES Interest(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+**Fields:**
+- `id`: UUID primary key (CHAR(36)).
+- `user_id`: UUID foreign key (CHAR(36)).
+- `interest_id`: UUID foreign key (CHAR(36)).
+- `created_at`: Timestamp for creation.
+- `updated_at`: Timestamp for last update.
+
+---
+
+### Relationships Summary
+
+- **User** has a one-to-many relationship with **WorkExperience**, **UserSkill**, and **UserInterest**.
+- **WorkExperience** is linked to **User** via `user_id`.
+- **UserSkill** links **User** and **Skill**.
+- **UserInterest** links **User** and **Interest**.
+- **Skill** and **Interest** have a one-to-many relationship with **UserSkill** and **UserInterest**, respectively.
+
+This schema ensures that UUIDs are used consistently for primary keys and foreign keys, and it maintains the integrity of the relationships between tables.
 For an Entity Relationship Diagram (ERD), refer to the `/docs/erd.pdf` file in the project repository.
 
 ---
